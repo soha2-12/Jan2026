@@ -1,0 +1,9 @@
+This problem is about finding the minimum time needed to move through a list of points in order, 
+starting from the first point and visiting each next point one by one. You can move one unit per 
+second either horizontally, vertically, or diagonally. The key idea is that diagonal movement is
+very powerful because in one second it reduces both the x and y distance by 1 at the same time. So
+, when moving from one point to the next, the fastest strategy is to move diagonally as much as possible, 
+and then finish any remaining distance in a straight line. Because of this, the minimum time needed to go
+from one point to another is simply the maximum of the horizontal distance and vertical distance between them.
+The solution just loops through each consecutive pair of points, calculates this value, and adds it to a running total. 
+In the end, that total represents the minimum time required to visit all the points in order.

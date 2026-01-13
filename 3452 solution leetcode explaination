@@ -1,0 +1,10 @@
+In this problem, each square contributes area between its bottom y-coordinate and top y-coordinate.
+Instead of thinking in terms of full squares, we imagine sweeping a horizontal line from bottom to top 
+and counting how much square area lies below that line. For every square, we mark two events: when the
+sweep line enters the square (at y) and when it leaves the square (at y + side length). As we move upward 
+through these sorted events, we keep track of the total horizontal width currently covered by squares. 
+The area gained while moving from one y-level to the next is simply this width multiplied by the vertical 
+distance moved. We keep adding these area chunks until the accumulated area reaches half of the total area
+of all squares. When that happens, the required y-coordinate lies between the previous y and the current y, 
+so we compute the exact position using simple proportional calculation. This gives the smallest y where the 
+area below equals the area above.

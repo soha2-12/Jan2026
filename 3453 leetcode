@@ -1,0 +1,38 @@
+class Solution:
+    def separateSquares(self, squares: list[list[int]]) -> float:
+        # total area of all squares
+        total_area = sum((l * l for _, _, l in squares))
+        # we want half of it
+        half = total_area / 2.0
+
+        # Create a list of events: at y (start) add width, at (y+l) remove width
+        events = []
+        for x, y, l in squares:
+            events.append((y, True, l))        # entering event
+            events.append((y + l, False, l))   # exiting event
+
+        # Sort events by y-coordinate
+        events.sort(key=lambda e: e[0])
+
+        prev_y = events[0][0]
+        cur_width = 0
+        area_so_far = 0.0
+
+        for y, is_start, length in events:
+            # area contribution from prev_y up to this y
+            dy = y - prev_y
+            area_chunk = cur_width * dy
+
+            if area_so_far + area_chunk >= half:
+                # We reach half area somewhere between prev_y and y
+                # Solve for exact y using linear interpolation
+                return prev_y + (half - area_so_far) / cur_width
+
+            # otherwise update
+            area_so_far += area_chunk
+            # update width: add length if a square starts, subtract if it ends
+            cur_width += length if is_start else -length
+            prev_y = y
+
+        # fallback just in case
+        return prev_y

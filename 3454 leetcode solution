@@ -1,0 +1,78 @@
+class Solution(object):
+    def separateSquares(self, squares):
+        """
+        :type squares: List[List[int]]
+        :rtype: float
+        """
+        events = []
+        xs = set()
+
+        for x, y, l in squares:
+            events.append((y, 1, x, x + l))
+            events.append((y + l, -1, x, x + l))
+            xs.add(x)
+            xs.add(x + l)
+
+        events.sort()
+        xs = sorted(xs)
+
+        class SegmentTree(object):
+            def __init__(self, xs):
+                self.xs = xs
+                self.n = len(xs) - 1
+                self.cnt = [0] * (4 * self.n)
+                self.len = [0] * (4 * self.n)
+
+            def _update(self, i, l, r, ql, qr, v):
+                if qr <= l or r <= ql:
+                    return
+                if ql <= l and r <= qr:
+                    self.cnt[i] += v
+                else:
+                    m = (l + r) // 2
+                    self._update(i*2+1, l, m, ql, qr, v)
+                    self._update(i*2+2, m, r, ql, qr, v)
+
+                if self.cnt[i] > 0:
+                    self.len[i] = self.xs[r] - self.xs[l]
+                else:
+                    if r - l == 1:
+                        self.len[i] = 0
+                    else:
+                        self.len[i] = self.len[i*2+1] + self.len[i*2+2]
+
+            def update(self, l, r, v):
+                self._update(0, 0, self.n, l, r, v)
+
+            def query(self):
+                return self.len[0]
+
+        def compute_total_area():
+            st = SegmentTree(xs)
+            area = 0
+            py = events[0][0]
+            for y, d, xl, xr in events:
+                h = y - py
+                if h > 0:
+                    area += st.query() * h
+                    py = y
+                st.update(bisect_left(xs, xl), bisect_left(xs, xr), d)
+            return area
+
+        half = compute_total_area() / 2.0
+
+        st = SegmentTree(xs)
+        cur = 0
+        py = events[0][0]
+
+        for y, d, xl, xr in events:
+            h = y - py
+            if h > 0:
+                w = st.query()
+                if cur + w * h >= half:
+                    return py + (half - cur) / w
+                cur += w * h
+                py = y
+            st.update(bisect_left(xs, xl), bisect_left(xs, xr), d)
+
+        return py

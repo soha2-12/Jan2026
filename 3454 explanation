@@ -1,0 +1,12 @@
+This problem asks us to draw a horizontal line such that the unique area covered by 
+all squares above the line equals the unique area below it, even when squares overlap.
+To handle overlaps correctly, we imagine sweeping a horizontal line from bottom to top
+and tracking which parts of the x-axis are currently covered by active squares. As the 
+sweep line moves upward, the area added is simply the covered width on the x-axis
+multiplied by the vertical distance moved. First, we compute the total union area of
+all squares, then target half of that area. During the second sweep, we keep accumulating 
+area until we reach (or cross) half of the total; when that happens, we precisely calculate
+how far upward the line needs to move within the current strip to balance the areas.
+Because overlapping regions are counted only once and the sweep always moves upward,
+the first y-value where this balance occurs is the minimum valid answer, which is exactly
+what the problem asks for.

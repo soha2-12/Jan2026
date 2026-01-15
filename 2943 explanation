@@ -1,0 +1,15 @@
+This problem is about creating the largest possible square hole 
+in a grid after removing some horizontal and vertical bars.
+When you remove consecutive bars, they merge adjacent cells 
+and effectively increase the usable length in that direction.
+So the key idea is to find the longest sequence of consecutive 
+removed horizontal bars and the longest sequence of consecutive
+removed vertical bars. After sorting both lists, we scan them
+to count how many bars are consecutive. If bars are consecutive,
+we keep increasing a counter; if not, we reset it. The longest 
+such streak in horizontal bars gives the maximum height expansion,
+and similarly vertical bars give the width expansion. Since 
+removing k consecutive bars creates a gap of k + 1 cells, we 
+add 1 to both streaks. A square needs equal height and width,
+so we take the minimum of the two expanded values as the side 
+length. Finally, the area is just the side length squared.

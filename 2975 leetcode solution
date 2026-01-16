@@ -1,0 +1,23 @@
+class Solution(object):
+    def maximizeSquareArea(self, m, n, hFences, vFences):
+        MOD = 10**9 + 7
+
+        h = [1] + hFences + [m]
+        v = [1] + vFences + [n]
+
+        h.sort()
+        v.sort()
+
+        h_diff = set()
+        for i in range(len(h)):
+            for j in range(i + 1, len(h)):
+                h_diff.add(h[j] - h[i])
+
+        max_area = -1
+        for i in range(len(v)):
+            for j in range(i + 1, len(v)):
+                d = v[j] - v[i]
+                if d in h_diff:
+                    max_area = max(max_area, d * d)
+
+        return max_area % MOD if max_area != -1 else -1

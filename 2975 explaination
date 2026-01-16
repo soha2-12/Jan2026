@@ -1,0 +1,13 @@
+The idea of this problem is to form the largest possible square by removing
+some horizontal and vertical fences. First, we treat the field boundaries as
+fences too, so we add 1 and m to the horizontal fence list and 1 and n to 
+the vertical fence list, then sort them. From the horizontal fences, we 
+calculate all possible vertical distances between every pair of fences 
+and store them in a set, because these distances represent all possible 
+heights of a square. Next, we iterate over every pair of vertical fences
+and compute their distance, which represents a possible width. If this width
+also exists in the horizontal distance set, then a square of that side 
+length can be formed. For each valid square, we compute its area 
+(side × side) and keep track of the maximum one found. If no square is 
+possible, we return -1; otherwise, we return the maximum area modulo 
+10^9 + 7 .

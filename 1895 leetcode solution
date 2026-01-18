@@ -1,0 +1,45 @@
+class Solution:
+    def largestMagicSquare(self, grid):
+        m, n = len(grid), len(grid[0])
+        
+        # Prefix sums for rows
+        row = [[0]*(n+1) for _ in range(m)]
+        for i in range(m):
+            for j in range(n):
+                row[i][j+1] = row[i][j] + grid[i][j]
+        
+        # Prefix sums for columns
+        col = [[0]*n for _ in range(m+1)]
+        for j in range(n):
+            for i in range(m):
+                col[i+1][j] = col[i][j] + grid[i][j]
+        
+        def isMagic(r, c, k):
+            target = row[r][c+k] - row[r][c]
+            
+            # check rows
+            for i in range(r, r+k):
+                if row[i][c+k] - row[i][c] != target:
+                    return False
+            
+            # check columns
+            for j in range(c, c+k):
+                if col[r+k][j] - col[r][j] != target:
+                    return False
+            
+            # diagonals
+            d1 = d2 = 0
+            for i in range(k):
+                d1 += grid[r+i][c+i]
+                d2 += grid[r+i][c+k-1-i]
+            
+            return d1 == target and d2 == target
+        
+        # Try sizes from largest to smallest
+        for size in range(min(m, n), 1, -1):
+            for i in range(m - size + 1):
+                for j in range(n - size + 1):
+                    if isMagic(i, j, size):
+                        return size
+        
+        return 1

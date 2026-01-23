@@ -1,0 +1,18 @@
+This program finds the minimum number of pair
+removal operations needed to make an array sorted.
+It uses a priority queue (min-heap) to always
+select the adjacent pair with the smallest sum
+for merging. A doubly linked list is simulated
+using index arrays to efficiently maintain 
+neighboring elements after each merge. 
+The algorithm also maintains an inversion count 
+to check whether the array is sorted; an inversion
+occurs when an element is greater than its next
+element. During each iteration, the smallest 
+valid adjacent pair is merged, the linked list is
+updated, inversion counts are adjusted, and new
+adjacent pairs are inserted into the heap. 
+The process continues until all inversions are 
+removed, meaning the array is sorted. The number 
+of merge operations performed is returned as the
+final result.

@@ -1,0 +1,70 @@
+import heapq
+
+class Solution:
+    def minimumPairRemoval(self, nums):
+        n = len(nums)
+        if n < 2:
+            return 0
+        
+        # Doubly linked list via arrays
+        # prev_idx[i] points to the index currently to the left of i
+        prev_idx = [i - 1 for i in range(n)]
+        next_idx = [i + 1 for i in range(n)]
+        next_idx[n-1] = -1
+        
+        active = [True] * n
+        pq = []
+        
+        # Initial heap population
+        for i in range(n - 1):
+            heapq.heappush(pq, (nums[i] + nums[i+1], i))
+            
+        # Track inversions to know when the array is sorted
+        inversions = 0
+        for i in range(n - 1):
+            if nums[i] > nums[i+1]:
+                inversions += 1
+        
+        ops = 0
+        while inversions > 0:
+            # 1. Extract the valid minimum pair
+            # In Python 2, heapq.heappop is efficient for large lists
+            while pq:
+                s, i = heapq.heappop(pq)
+                j = next_idx[i]
+                # Ensure pair is still adjacent and active
+                if active[i] and j != -1 and active[j] and (nums[i] + nums[j] == s):
+                    break
+            else:
+                break # Should not happen if inversions > 0
+
+            # 2. Merge i and j
+            p = prev_idx[i]
+            nn = next_idx[j]
+            
+            # Remove old inversion contributions
+            if p != -1 and nums[p] > nums[i]: inversions -= 1
+            if nums[i] > nums[j]: inversions -= 1
+            if nn != -1 and nums[j] > nums[nn]: inversions -= 1
+            
+            # Apply the merge operation
+            nums[i] = nums[i] + nums[j]
+            active[j] = False
+            ops += 1
+            
+            # Re-link the list
+            next_idx[i] = nn
+            if nn != -1:
+                prev_idx[nn] = i
+            
+            # Add new inversion contributions
+            if p != -1 and nums[p] > nums[i]: inversions += 1
+            if nn != -1 and nums[i] > nums[nn]: inversions += 1
+            
+            # 3. Push new neighbors into heap
+            if p != -1:
+                heapq.heappush(pq, (nums[p] + nums[i], p))
+            if nn != -1:
+                heapq.heappush(pq, (nums[i] + nums[nn], i))
+                
+        return ops

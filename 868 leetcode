@@ -1,0 +1,15 @@
+class Solution(object):
+    def binaryGap(self, n):
+        last = -1
+        ans = 0
+        i = 0
+        
+        while n > 0:
+            if n & 1:  # if current bit is 1
+                if last != -1:
+                    ans = max(ans, i - last)
+                last = i
+            n >>= 1   # shift right
+            i += 1
+        
+        return ans

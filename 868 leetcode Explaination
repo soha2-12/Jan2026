@@ -1,0 +1,38 @@
+Problem in Simple Words
+
+You are given a number n.
+Convert it to binary
+Find distances between consecutive 1s
+Return the largest distance
+
+Solution Idea:
+Instead of converting to a string, we scan bits directly.
+We keep track of:
+current bit position
+last position where we saw a 1
+maximum gap so far
+Every time we see a new 1:
+
+        last = -1      # position of previous 1
+        ans = 0        # maximum gap
+        i = 0          # current bit position
+
+       if n & 1:           # if current bit is 1
+
+            n >>= 1             # remove last bit
+            i += 1              # move to next position
+
+1. Read bits from RIGHT → LEFT
+   10110 → start from rightmost 0
+2. Check if current bit is 1
+   n & 1
+   returns 1 → bit is 1
+   returns 0 → bit is 0
+3. When a 1 is found
+  If we already saw a previous 1:
+  gap = current_position − previous_position
+  Update maximum gap.
+4. Shift right
+  n >>= 1
+  Removes last bit.
+  10110 → 1011 → 101 → 10 → 1 → 0
